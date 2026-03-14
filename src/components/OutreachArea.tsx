@@ -35,6 +35,23 @@ export function OutreachArea({ template, profileDescription }: Props) {
     setSelectedIdx(null);
   };
 
+  // Paste from clipboard (Ctrl+V)
+  useEffect(() => {
+    const onPaste = (e: ClipboardEvent) => {
+      const items = e.clipboardData?.items;
+      if (!items) return;
+      for (const item of Array.from(items)) {
+        if (item.type.startsWith("image/")) {
+          const f = item.getAsFile();
+          if (f) handleFile(f);
+          break;
+        }
+      }
+    };
+    window.addEventListener("paste", onPaste);
+    return () => window.removeEventListener("paste", onPaste);
+  }, []);
+
   const analyze = useCallback(async (prompt?: string) => {
     if (!file || !user) return;
     setLoading(true);
