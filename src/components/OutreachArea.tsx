@@ -1,4 +1,4 @@
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
 import { Upload, RefreshCw, Copy, Check, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -34,6 +34,23 @@ export function OutreachArea({ template, profileDescription }: Props) {
     setResult(null);
     setSelectedIdx(null);
   };
+
+  // Paste from clipboard (Ctrl+V)
+  useEffect(() => {
+    const onPaste = (e: ClipboardEvent) => {
+      const items = e.clipboardData?.items;
+      if (!items) return;
+      for (const item of Array.from(items)) {
+        if (item.type.startsWith("image/")) {
+          const f = item.getAsFile();
+          if (f) handleFile(f);
+          break;
+        }
+      }
+    };
+    window.addEventListener("paste", onPaste);
+    return () => window.removeEventListener("paste", onPaste);
+  }, []);
 
   const analyze = useCallback(async (prompt?: string) => {
     if (!file || !user) return;
@@ -121,7 +138,7 @@ export function OutreachArea({ template, profileDescription }: Props) {
         ) : (
           <>
             <Upload className="h-8 w-8 text-muted-foreground mb-2" />
-            <p className="text-sm text-muted-foreground">LinkedIn-Screenshot hochladen</p>
+            <p className="text-sm text-muted-foreground">Screenshot einfügen (Strg+V) oder hier hochladen</p>
           </>
         )}
       </div>
