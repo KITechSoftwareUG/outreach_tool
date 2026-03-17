@@ -12,15 +12,32 @@ serve(async (req) => {
   }
 
   try {
-    const { imageUrl, profileDescription, customPrompt } = await req.json();
+    const { imageUrl, profileText, profileDescription, customPrompt } = await req.json();
 
+    // Determine which AI provider to use
+    const OPENAI_API_KEY = Deno.env.get("OPENAI_API_KEY");
     const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
-    if (!LOVABLE_API_KEY) throw new Error("LOVABLE_API_KEY is not configured");
 
-    const systemPrompt = `Du bist ein Outreach-Assistent. Du analysierst LinkedIn-Profil-Screenshots.
+    let apiUrl: string;
+    let apiKey: string;
+    let model: string;
+
+    if (OPENAI_API_KEY) {
+      apiUrl = "https://api.openai.com/v1/chat/completions";
+      apiKey = OPENAI_API_KEY;
+      model = "gpt-4o";
+    } else if (LOVABLE_API_KEY) {
+      apiUrl = "https://ai.gateway.lovable.dev/v1/chat/completions";
+      apiKey = LOVABLE_API_KEY;
+      model = "google/gemini-2.5-flash";
+    } else {
+      throw new Error("Kein AI-Key konfiguriert (OPENAI_API_KEY oder LOVABLE_API_KEY)");
+    }
+
+    const systemPrompt = `Du bist ein Outreach-Assistent. Du analysierst LinkedIn-Profile.
 
 Deine Aufgaben:
-1. Extrahiere den vollständigen Namen der Person aus dem Screenshot. Sei sehr genau.
+1. Extrahiere den vollständigen Namen der Person.
 2. Generiere genau 5 kurze, personalisierte Icebreaker-Sätze basierend auf dem Profil.
 
 ${profileDescription ? `Kontext zum Absender: ${profileDescription}` : ""}
@@ -35,63 +52,65 @@ Die Icebreaker sollen:
       ? `Analysiere dieses LinkedIn-Profil und generiere Icebreaker mit folgendem Fokus: ${customPrompt}`
       : "Analysiere dieses LinkedIn-Profil und generiere 5 personalisierte Icebreaker.";
 
-    const response = await fetch(
-      "https://ai.gateway.lovable.dev/v1/chat/completions",
-      {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${LOVABLE_API_KEY}`,
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          model: "google/gemini-2.5-flash",
-          messages: [
-            { role: "system", content: systemPrompt },
-            {
-              role: "user",
-              content: [
-                { type: "text", text: userPrompt },
-                { type: "image_url", image_url: { url: imageUrl } },
-              ],
-            },
-          ],
-          tools: [
-            {
-              type: "function",
-              function: {
-                name: "extract_profile_data",
-                description:
-                  "Extract name and generate icebreakers from a LinkedIn profile screenshot.",
-                parameters: {
-                  type: "object",
-                  properties: {
-                    name: {
-                      type: "string",
-                      description: "Full name of the person from the LinkedIn profile",
-                    },
-                    icebreakers: {
-                      type: "array",
-                      items: { type: "string" },
-                      description: "Exactly 5 personalized icebreaker sentences",
-                    },
+    // Build message content: either image or text
+    const userContent: any[] = [{ type: "text", text: userPrompt }];
+
+    if (imageUrl) {
+      userContent.push({ type: "image_url", image_url: { url: imageUrl } });
+    } else if (profileText) {
+      userContent.push({ type: "text", text: `\n\nProfildaten:\n${profileText}` });
+    } else {
+      throw new Error("Kein Bild oder Text übergeben");
+    }
+
+    const response = await fetch(apiUrl, {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${apiKey}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        model,
+        messages: [
+          { role: "system", content: systemPrompt },
+          { role: "user", content: userContent },
+        ],
+        tools: [
+          {
+            type: "function",
+            function: {
+              name: "extract_profile_data",
+              description:
+                "Extract name and generate icebreakers from a LinkedIn profile.",
+              parameters: {
+                type: "object",
+                properties: {
+                  name: {
+                    type: "string",
+                    description: "Full name of the person from the LinkedIn profile",
                   },
-                  required: ["name", "icebreakers"],
-                  additionalProperties: false,
+                  icebreakers: {
+                    type: "array",
+                    items: { type: "string" },
+                    description: "Exactly 5 personalized icebreaker sentences",
+                  },
                 },
+                required: ["name", "icebreakers"],
+                additionalProperties: false,
               },
             },
-          ],
-          tool_choice: {
-            type: "function",
-            function: { name: "extract_profile_data" },
           },
-        }),
-      }
-    );
+        ],
+        tool_choice: {
+          type: "function",
+          function: { name: "extract_profile_data" },
+        },
+      }),
+    });
 
     if (!response.ok) {
       const errText = await response.text();
-      console.error("AI gateway error:", response.status, errText);
+      console.error("AI error:", response.status, errText);
 
       if (response.status === 429) {
         return new Response(

@@ -1,0 +1,9 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(ls /home/deploy/KITech/projects/outreach_frontend/.env*)",
+      "Bash(wc -l /home/deploy/KITech/projects/outreach_frontend/src/components/*.tsx)",
+      "Bash(grep -v \"^ui$\")"
+    ]
+  }
+}
