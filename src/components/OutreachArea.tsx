@@ -1,5 +1,5 @@
 import { useState, useCallback, useEffect } from "react";
-import { Upload, RefreshCw, Copy, Check, Sparkles, Type, Image } from "lucide-react";
+import { Upload, RefreshCw, Copy, Check, Sparkles, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -18,11 +18,8 @@ interface AiResult {
   icebreakers: string[];
 }
 
-type InputMode = "image" | "text";
-
 export function OutreachArea({ template, profileDescription }: Props) {
   const { user } = useAuth();
-  const [inputMode, setInputMode] = useState<InputMode>("image");
   const [file, setFile] = useState<File | null>(null);
   const [preview, setPreview] = useState<string | null>(null);
   const [profileText, setProfileText] = useState("");
@@ -40,6 +37,11 @@ export function OutreachArea({ template, profileDescription }: Props) {
     setResult(null);
     setSelectedIdx(null);
     setManualIcebreaker("");
+  };
+
+  const removeFile = () => {
+    setFile(null);
+    setPreview(null);
   };
 
   const reset = () => {
@@ -61,10 +63,7 @@ export function OutreachArea({ template, profileDescription }: Props) {
       for (const item of Array.from(items)) {
         if (item.type.startsWith("image/")) {
           const f = item.getAsFile();
-          if (f) {
-            setInputMode("image");
-            handleFile(f);
-          }
+          if (f) handleFile(f);
           break;
         }
       }
@@ -75,8 +74,7 @@ export function OutreachArea({ template, profileDescription }: Props) {
 
   const analyze = useCallback(async (prompt?: string) => {
     if (!user) return;
-    if (inputMode === "image" && !file) return;
-    if (inputMode === "text" && !profileText.trim()) return;
+    if (!file && !profileText.trim()) return;
 
     setLoading(true);
     setSelectedIdx(null);
@@ -86,7 +84,7 @@ export function OutreachArea({ template, profileDescription }: Props) {
       let imageUrl: string | undefined;
       let uploadPath: string | undefined;
 
-      if (inputMode === "image" && file) {
+      if (file) {
         uploadPath = `${user.id}/${Date.now()}-${file.name}`;
         const { error: uploadError } = await supabase.storage
           .from("screenshots")
@@ -103,7 +101,7 @@ export function OutreachArea({ template, profileDescription }: Props) {
       const { data, error } = await supabase.functions.invoke("analyze-profile", {
         body: {
           imageUrl,
-          profileText: inputMode === "text" ? profileText.trim() : undefined,
+          profileText: profileText.trim() || undefined,
           profileDescription,
           customPrompt: prompt || undefined,
         },
@@ -122,7 +120,7 @@ export function OutreachArea({ template, profileDescription }: Props) {
     } finally {
       setLoading(false);
     }
-  }, [file, user, profileDescription, profileText, inputMode]);
+  }, [file, user, profileDescription, profileText]);
 
   const chosenIcebreaker =
     manualIcebreaker.trim() ||
@@ -140,34 +138,32 @@ export function OutreachArea({ template, profileDescription }: Props) {
     setTimeout(() => setCopied(false), 2000);
   };
 
-  const hasInput = inputMode === "image" ? !!file : !!profileText.trim();
+  const hasInput = !!file || !!profileText.trim();
 
   return (
     <div className="space-y-5">
-      {/* Mode toggle */}
-      <div className="flex gap-2">
-        <Button
-          variant={inputMode === "image" ? "default" : "outline"}
-          size="sm"
-          onClick={() => { setInputMode("image"); setResult(null); setSelectedIdx(null); }}
-        >
-          <Image className="mr-2 h-4 w-4" />
-          Screenshot
-        </Button>
-        <Button
-          variant={inputMode === "text" ? "default" : "outline"}
-          size="sm"
-          onClick={() => { setInputMode("text"); setResult(null); setSelectedIdx(null); }}
-        >
-          <Type className="mr-2 h-4 w-4" />
-          Text eingeben
-        </Button>
-      </div>
+      {/* Text input - always visible */}
+      <Textarea
+        placeholder="LinkedIn-Profilinfos hier einfügen (Name, Position, Unternehmen, About-Text, etc.)"
+        value={profileText}
+        onChange={(e) => { setProfileText(e.target.value); setResult(null); }}
+        className="min-h-[100px] text-sm"
+      />
 
-      {/* Image upload */}
-      {inputMode === "image" && (
+      {/* Screenshot - optional, compact */}
+      {preview ? (
+        <div className="relative inline-block">
+          <img src={preview} alt="Screenshot" className="max-h-32 rounded border object-contain" />
+          <button
+            onClick={removeFile}
+            className="absolute -right-2 -top-2 rounded-full bg-destructive p-1 text-destructive-foreground shadow-sm hover:bg-destructive/90"
+          >
+            <X className="h-3 w-3" />
+          </button>
+        </div>
+      ) : (
         <div
-          className={`relative flex flex-col items-center justify-center rounded-lg border-2 border-dashed p-8 transition-colors cursor-pointer ${
+          className={`flex items-center gap-3 rounded-lg border-2 border-dashed px-4 py-3 transition-colors cursor-pointer ${
             dragOver ? "border-primary bg-primary/5" : "border-border hover:border-muted-foreground/50"
           }`}
           onDragOver={(e) => { e.preventDefault(); setDragOver(true); }}
@@ -189,25 +185,9 @@ export function OutreachArea({ template, profileDescription }: Props) {
             input.click();
           }}
         >
-          {preview ? (
-            <img src={preview} alt="LinkedIn Screenshot" className="max-h-48 rounded object-contain" />
-          ) : (
-            <>
-              <Upload className="h-8 w-8 text-muted-foreground mb-2" />
-              <p className="text-sm text-muted-foreground">Screenshot einfügen (Strg+V) oder hier hochladen</p>
-            </>
-          )}
+          <Upload className="h-4 w-4 text-muted-foreground" />
+          <p className="text-sm text-muted-foreground">Screenshot hinzufügen (optional, Strg+V)</p>
         </div>
-      )}
-
-      {/* Text input */}
-      {inputMode === "text" && (
-        <Textarea
-          placeholder="LinkedIn-Profilinfos hier einfügen (Name, Position, Unternehmen, About-Text, etc.)"
-          value={profileText}
-          onChange={(e) => { setProfileText(e.target.value); setResult(null); }}
-          className="min-h-[140px] text-sm"
-        />
       )}
 
       {/* Analyze button */}

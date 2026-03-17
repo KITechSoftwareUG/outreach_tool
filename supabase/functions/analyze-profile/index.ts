@@ -52,14 +52,16 @@ Die Icebreaker sollen:
       ? `Analysiere dieses LinkedIn-Profil und generiere Icebreaker mit folgendem Fokus: ${customPrompt}`
       : "Analysiere dieses LinkedIn-Profil und generiere 5 personalisierte Icebreaker.";
 
-    // Build message content: either image or text
+    // Build message content: image and/or text (both allowed)
     const userContent: any[] = [{ type: "text", text: userPrompt }];
 
+    if (profileText) {
+      userContent.push({ type: "text", text: `\n\nProfildaten:\n${profileText}` });
+    }
     if (imageUrl) {
       userContent.push({ type: "image_url", image_url: { url: imageUrl } });
-    } else if (profileText) {
-      userContent.push({ type: "text", text: `\n\nProfildaten:\n${profileText}` });
-    } else {
+    }
+    if (!imageUrl && !profileText) {
       throw new Error("Kein Bild oder Text übergeben");
     }
 
