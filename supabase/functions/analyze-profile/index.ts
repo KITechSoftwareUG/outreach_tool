@@ -38,28 +38,41 @@ serve(async (req) => {
 
 Deine Aufgaben:
 1. Extrahiere den Vornamen der Person
-2. Generiere genau 5 kurze Icebreaker (1-2 Sätze, MAX 3 Sätze)
+2. Generiere genau 5 kurze Icebreaker (1 Satz, MAXIMAL 2 kurze Sätze)
 
 ${profileDescription ? `Kontext zum Absender: ${profileDescription}` : ""}
 
-WICHTIG: Der Icebreaker ist NUR ein kurzer persönlicher Einstieg in eine längere Nachricht. Er soll KEIN neues Thema aufmachen, KEINE Frage stellen, KEIN Angebot machen. Er bezieht sich nur kurz auf etwas aus dem Profil der Person.
+WICHTIG: Der Icebreaker ist ein ABGESCHLOSSENER, kurzer persönlicher Kommentar - wie ein Kompliment oder eine Feststellung. Er ist KEIN Gesprächseinstieg, KEINE Einleitung, KEIN Aufhänger. Er steht für sich allein und leitet NICHTS ein.
+
+ABSOLUT VERBOTEN:
+- Fragen jeder Art ("Wie...", "Was...", "Kennst du...")
+- Angebote oder Vorschläge
+- Offene Formulierungen die eine Antwort erwarten
+- Floskeln wie "Ich habe gesehen dass...", "Mir ist aufgefallen..."
+- Sätze die mit "und" oder "da" weitergehen wollen
+- Allgemeine Aussagen ohne konkrete Fakten aus dem Profil
 
 Stil:
-- Wie eine kurze WhatsApp-Nachricht an einen Bekannten
-- Locker, direkt, kein Business-Deutsch
-- Konkrete Fakten aus dem Profil aufgreifen (Jahre als GF, Branche, Stadt, etc.)
-- Respekt/Anerkennung zeigen wo passend
-- KEINE Fragen, KEINE Angebote, KEINE Floskeln wie "Ich habe gesehen dass..."
+- Wie ein kurzer Kommentar den du einem Kumpel zurufen würdest
+- Maximal 1-2 Sätze, knackig und fertig
+- Konkrete Zahlen/Fakten aus dem Profil (Jahre, Branche, Stadt, Firma)
+- Anerkennung/Respekt zeigen, aber kurz und bündig
+- Umgangssprachlich, kein Business-Deutsch
+- Der Satz muss ABGESCHLOSSEN klingen, nicht wie der Anfang von etwas
 
-Beispiele für gute Icebreaker:
-- "35 Jahre Geschäftsführer in der Baubranche - und dann noch mitten im Stuttgart. Respekt! Du hast schon einiges gesehen."
+Beispiele für PERFEKTE Icebreaker:
+- "35 Jahre GF in der Baubranche mitten in Stuttgart - Respekt, du hast echt was aufgebaut."
 - "Seit 2018 in der Logistik selbstständig in Hamburg - läuft bei dir!"
-- "IT-Beratung und Geschäftsführer seit über 10 Jahren in München. Starker Weg."
+- "IT-Beratung und GF seit über 10 Jahren in München. Starker Weg."
+- "12 Jahre Erfahrung im Maschinenbau und jetzt eigene Firma - nice."
+- "Handwerk und Digitalisierung in einem - das sieht man selten. Stark."
 
-Beispiele für SCHLECHTE Icebreaker (NICHT so machen):
-- "Wie gehst du mit der Digitalisierung in deiner Branche um?" (stellt eine Frage)
-- "Ich könnte dir bei deinen Prozessen helfen" (macht ein Angebot)
-- "Mir ist aufgefallen, dass du im Bereich X tätig bist" (Floskel)`;
+Beispiele für SCHLECHTE Icebreaker (NIEMALS so):
+- "Wie gehst du mit der Digitalisierung um?" (FRAGE!)
+- "Ich könnte dir bei deinen Prozessen helfen" (ANGEBOT!)
+- "Mir ist aufgefallen, dass du im Bereich X tätig bist" (FLOSKEL!)
+- "Das klingt spannend, da gibt es sicher viel zu erzählen" (ZU OFFEN!)
+- "Dein Werdegang ist beeindruckend und zeigt dass..." (ZU LANG, ZU OFFEN!)`;
 
     const userPrompt = customPrompt
       ? `Analysiere dieses LinkedIn-Profil und generiere Icebreaker mit folgendem Fokus: ${customPrompt}`
