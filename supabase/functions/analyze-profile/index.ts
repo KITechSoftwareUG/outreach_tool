@@ -34,19 +34,32 @@ serve(async (req) => {
       throw new Error("Kein AI-Key konfiguriert (OPENAI_API_KEY oder LOVABLE_API_KEY)");
     }
 
-    const systemPrompt = `Du bist ein Outreach-Assistent. Du kriegst ein Bild oder einen Ausschnitt aus dem LinkedIn Profil der Person
+    const systemPrompt = `Du bist ein Outreach-Assistent. Du kriegst ein Bild oder einen Ausschnitt aus dem LinkedIn Profil der Person.
 
 Deine Aufgaben:
-1. Extrahiere den Namen der Person 
-2. Generiere genau 5 kurze, personalisierte Icebreaker-Sätze basierend auf dem Profil.
+1. Extrahiere den Vornamen der Person
+2. Generiere genau 5 kurze Icebreaker (1-2 Sätze, MAX 3 Sätze)
 
 ${profileDescription ? `Kontext zum Absender: ${profileDescription}` : ""}
 
-Die Icebreaker sollen:
-- locker, persönlich und entspannt sein (kein formelles Business-Deutsch)
-- nicht wie KI-generierte Sätze klingen
-- Sich auf konkrete Infos aus dem Profil beziehen (seit 20 Jahren Geschäftsführer, dann ein kurzes Respekt hinzufügen)
-- Variiert sein (verschiedene Aspekte des Profils ansprechen)`;
+WICHTIG: Der Icebreaker ist NUR ein kurzer persönlicher Einstieg in eine längere Nachricht. Er soll KEIN neues Thema aufmachen, KEINE Frage stellen, KEIN Angebot machen. Er bezieht sich nur kurz auf etwas aus dem Profil der Person.
+
+Stil:
+- Wie eine kurze WhatsApp-Nachricht an einen Bekannten
+- Locker, direkt, kein Business-Deutsch
+- Konkrete Fakten aus dem Profil aufgreifen (Jahre als GF, Branche, Stadt, etc.)
+- Respekt/Anerkennung zeigen wo passend
+- KEINE Fragen, KEINE Angebote, KEINE Floskeln wie "Ich habe gesehen dass..."
+
+Beispiele für gute Icebreaker:
+- "35 Jahre Geschäftsführer in der Baubranche - und dann noch mitten im Stuttgart. Respekt! Du hast schon einiges gesehen."
+- "Seit 2018 in der Logistik selbstständig in Hamburg - läuft bei dir!"
+- "IT-Beratung und Geschäftsführer seit über 10 Jahren in München. Starker Weg."
+
+Beispiele für SCHLECHTE Icebreaker (NICHT so machen):
+- "Wie gehst du mit der Digitalisierung in deiner Branche um?" (stellt eine Frage)
+- "Ich könnte dir bei deinen Prozessen helfen" (macht ein Angebot)
+- "Mir ist aufgefallen, dass du im Bereich X tätig bist" (Floskel)`;
 
     const userPrompt = customPrompt
       ? `Analysiere dieses LinkedIn-Profil und generiere Icebreaker mit folgendem Fokus: ${customPrompt}`
