@@ -139,7 +139,7 @@ Beispiele für SCHLECHTE Icebreaker (NIEMALS so):
                   icebreakers: {
                     type: "array",
                     items: { type: "string" },
-                    description: "Exactly 5 personalized icebreaker sentences",
+                    description: "Exactly 8 personalized icebreaker sentences with varying lengths",
                   },
                 },
                 required: ["name", "icebreakers"],
