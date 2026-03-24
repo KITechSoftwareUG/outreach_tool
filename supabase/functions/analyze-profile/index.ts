@@ -37,8 +37,8 @@ serve(async (req) => {
     const systemPrompt = `Du bist ein Outreach-Assistent. Du kriegst ein Bild oder einen Ausschnitt aus dem LinkedIn Profil der Person.
 
 Deine Aufgaben:
-1. Extrahiere den Vornamen der Person
-2. Generiere genau 5 personalisierte Icebreaker mit VERSCHIEDENEN Längen und Stilen
+1. Extrahiere NUR den VORNAMEN der Person (NICHT den Nachnamen! Nur "Max", nicht "Max Müller")
+2. Generiere genau 8 personalisierte Icebreaker mit VERSCHIEDENEN Längen und Stilen
 
 ${profileDescription ? `Kontext zum Absender: ${profileDescription}` : ""}
 
@@ -52,12 +52,15 @@ ABSOLUT VERBOTEN:
 - Sätze die mit "und" oder "da" weitergehen wollen
 - Allgemeine Aussagen ohne konkrete Fakten aus dem Profil
 
-VARIATION IST PFLICHT – Die 5 Icebreaker MÜSSEN sich in Länge UND Stil unterscheiden:
+VARIATION IST PFLICHT – Die 8 Icebreaker MÜSSEN sich in Länge UND Stil unterscheiden:
 - Icebreaker 1: KURZ (1 Satz) – knackiger Kommentar, direkt auf den Punkt
 - Icebreaker 2: MITTEL (2 Sätze) – Fakt + Anerkennung
 - Icebreaker 3: LÄNGER (2-3 Sätze) – ausführlicher mit mehr Kontext
-- Icebreaker 4: KURZ oder MITTEL – anderer Blickwinkel (z.B. Branche, Firma, Rolle, Standort)
-- Icebreaker 5: MITTEL oder LÄNGER – nochmal ein anderer Aspekt aus dem Profil
+- Icebreaker 4: KURZ (1 Satz) – anderer Blickwinkel (z.B. Branche, Firma, Rolle)
+- Icebreaker 5: MITTEL (2 Sätze) – Fokus auf Standort oder Branche
+- Icebreaker 6: LÄNGER (2-3 Sätze) – nochmal ein anderer Aspekt aus dem Profil
+- Icebreaker 7: KURZ oder MITTEL – lockerer Ton, eher jung/frisch
+- Icebreaker 8: MITTEL oder LÄNGER – respektvoller Ton, eher erfahren/senior
 
 Passe den Ton auch ans geschätzte Alter/Seniorität an:
 - Jüngere Personen / weniger Erfahrung → lockerer, "nice", "mega", "läuft bei dir"
@@ -93,7 +96,7 @@ Beispiele für SCHLECHTE Icebreaker (NIEMALS so):
 
     const userPrompt = customPrompt
       ? `Analysiere dieses LinkedIn-Profil und generiere Icebreaker mit folgendem Fokus: ${customPrompt}`
-      : "Analysiere dieses LinkedIn-Profil und generiere 5 personalisierte Icebreaker.";
+      : "Analysiere dieses LinkedIn-Profil und generiere 8 personalisierte Icebreaker.";
 
     // Build message content: image and/or text (both allowed)
     const userContent: any[] = [{ type: "text", text: userPrompt }];
@@ -131,12 +134,12 @@ Beispiele für SCHLECHTE Icebreaker (NIEMALS so):
                 properties: {
                   name: {
                     type: "string",
-                    description: "Full name of the person from the LinkedIn profile",
+                    description: "ONLY the first name (Vorname) of the person, NOT the full name",
                   },
                   icebreakers: {
                     type: "array",
                     items: { type: "string" },
-                    description: "Exactly 5 personalized icebreaker sentences",
+                    description: "Exactly 8 personalized icebreaker sentences with varying lengths",
                   },
                 },
                 required: ["name", "icebreakers"],
