@@ -52,12 +52,25 @@ ABSOLUT VERBOTEN:
 - Sätze die mit "und" oder "da" weitergehen wollen
 - Allgemeine Aussagen ohne konkrete Fakten aus dem Profil
 
+PRIORITÄT bei der Auswahl von Profil-Fakten (von WICHTIG zu UNWICHTIG):
+1. AKTUELLE Beiträge/Posts der Person auf LinkedIn (wenn sichtbar) – DAS ist Gold!
+2. Aktuelle Rolle / Position / was die Person JETZT macht
+3. Branche, Standort, Jahre Erfahrung
+4. Besondere Erfolge oder Projekte
+5. Firmengröße oder Teamverantwortung
+
+IGNORIERE oder vermeide:
+- Ausbildung / Studium / Abschlüsse – das ist IRRELEVANT und langweilig
+- Alte Positionen die lange her sind
+- Den Unternehmensnamen NICHT in jedem Icebreaker erwähnen – höchstens in 1-2 von 8
+- Zertifikate oder Kurse
+
 VARIATION IST PFLICHT – Die 8 Icebreaker MÜSSEN sich in Länge UND Stil unterscheiden:
 - Icebreaker 1: KURZ (1 Satz) – knackiger Kommentar, direkt auf den Punkt
 - Icebreaker 2: MITTEL (2 Sätze) – Fakt + Anerkennung
 - Icebreaker 3: LÄNGER (2-3 Sätze) – ausführlicher mit mehr Kontext
-- Icebreaker 4: KURZ (1 Satz) – anderer Blickwinkel (z.B. Branche, Firma, Rolle)
-- Icebreaker 5: MITTEL (2 Sätze) – Fokus auf Standort oder Branche
+- Icebreaker 4: KURZ (1 Satz) – anderer Blickwinkel (z.B. Branche, Rolle, Beitrag)
+- Icebreaker 5: MITTEL (2 Sätze) – Fokus auf aktuelle Aktivität oder Beitrag
 - Icebreaker 6: LÄNGER (2-3 Sätze) – nochmal ein anderer Aspekt aus dem Profil
 - Icebreaker 7: KURZ oder MITTEL – lockerer Ton, eher jung/frisch
 - Icebreaker 8: MITTEL oder LÄNGER – respektvoller Ton, eher erfahren/senior
@@ -69,30 +82,32 @@ Passe den Ton auch ans geschätzte Alter/Seniorität an:
 Stil:
 - Respektvoll-anerkennend, auf Augenhöhe
 - Umgangssprachlich aber wertschätzend (Wörter wie "stark", "Respekt", "nice", "mega" nutzen)
-- Konkrete Zahlen/Fakten aus dem Profil (Jahre, Branche, Stadt, Firma, Rolle)
+- Konkrete Zahlen/Fakten aus dem Profil (Jahre, Branche, Stadt, Rolle)
 - Der Icebreaker muss ABGESCHLOSSEN klingen, nicht wie der Anfang von etwas
 - Emojis sparsam erlaubt (💪, 🙂) aber nicht in jedem Icebreaker
+- NICHT jeder Icebreaker muss den Firmennamen enthalten!
 
 Beispiele für PERFEKTE Icebreaker (verschiedene Längen):
 
 KURZ (1 Satz):
 - "Die Elektrotechnik in Tirol fest im Griff, und das sogar dreifach – Respekt dafür!"
-- "IT-Beratung und GF seit über 10 Jahren in München – nice!"
+- "Seit über 10 Jahren in der IT-Beratung unterwegs – nice!"
 
 MITTEL (2 Sätze):
-- "Seit 2018 in der Logistik selbstständig in Hamburg. Bei dir scheint es richtig zu laufen – stark!"
-- "Euer Beitrag zur 3D Lasergravur war ja Input pur! Solche Beiträge schaut man sich doch gerne an. Stark! 🙂"
+- "Dein letzter Beitrag zur Digitalisierung im Mittelstand war echt on point. Sowas liest man viel zu selten – stark!"
+- "Seit 2018 in der Logistik selbstständig. Bei dir scheint es richtig zu laufen – Respekt!"
 
 LÄNGER (2-3 Sätze):
-- "Mega, 35 Jahre GF in der Baubranche mitten in Stuttgart. Da steckt richtig viel Erfahrung drin. Respekt! 💪"
-- "Geschäftsführer bei der Apleona Group ist schon eine starke Rolle, da laufen bestimmt täglich einige komplexe Prozesse zusammen. Respekt 💪🙂"
+- "Mega, über 20 Jahre in der Baubranche mitten in Stuttgart. Da steckt richtig viel Erfahrung drin. Respekt! 💪"
+- "Dein Post letzte Woche zum Thema Fachkräftemangel hat es gut auf den Punkt gebracht. Merkt man dass du da mitten drin steckst. Stark! 🙂"
 
 Beispiele für SCHLECHTE Icebreaker (NIEMALS so):
 - "Wie gehst du mit der Digitalisierung um?" (FRAGE!)
 - "Ich könnte dir bei deinen Prozessen helfen" (ANGEBOT!)
 - "Mir ist aufgefallen, dass du im Bereich X tätig bist" (FLOSKEL!)
 - "Das klingt spannend, da gibt es sicher viel zu erzählen" (ZU OFFEN!)
-- "Dein Werdegang ist beeindruckend und zeigt dass..." (ZU OFFEN!)`;
+- "Dein Studium an der TU München zeigt..." (AUSBILDUNG = IRRELEVANT!)
+- "Als Geschäftsführer bei der Firma XYZ..." (NICHT immer den Firmennamen!)`;
 
     const userPrompt = customPrompt
       ? `Analysiere dieses LinkedIn-Profil und generiere Icebreaker mit folgendem Fokus: ${customPrompt}`
