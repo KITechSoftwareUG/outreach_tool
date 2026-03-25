@@ -52,6 +52,19 @@ export default function Index() {
     setActiveId(data.id);
   };
 
+  const renameProfile = async (id: string, newName: string) => {
+    const { error } = await supabase
+      .from("sender_profiles")
+      .update({ name: newName })
+      .eq("id", id);
+    if (error) {
+      toast({ title: "Fehler", description: error.message, variant: "destructive" });
+      return;
+    }
+    setProfiles((prev) => prev.map((p) => (p.id === id ? { ...p, name: newName } : p)));
+    toast({ title: "Umbenannt" });
+  };
+
   const saveTemplate = async (template: string) => {
     if (!activeProfile) return;
     const { error } = await supabase
@@ -76,6 +89,7 @@ export default function Index() {
           activeId={activeId}
           onSelect={setActiveId}
           onCreate={() => setDialogOpen(true)}
+          onRename={renameProfile}
         />
         <div className="flex-1 flex flex-col">
           <header className="h-12 flex items-center border-b px-4">
