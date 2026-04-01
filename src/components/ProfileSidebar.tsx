@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from "react";
-import { Plus, User, LogOut, ChevronDown, ChevronRight, Workflow, BarChart3, Pencil } from "lucide-react";
+import { Plus, User, LogOut, ChevronDown, ChevronRight, Workflow, BarChart3, Pencil, Trash2 } from "lucide-react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
 import { Button } from "@/components/ui/button";
