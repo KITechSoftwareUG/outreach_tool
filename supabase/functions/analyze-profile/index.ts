@@ -34,8 +34,7 @@ serve(async (req) => {
       throw new Error("Kein AI-Key konfiguriert (OPENAI_API_KEY oder LOVABLE_API_KEY)");
     }
 
-    const systemPrompt = 
-`Du bist ein Outreach-Assistent. Du kriegst ein Bild oder einen Ausschnitt aus dem LinkedIn Profil der Person. Du generierst Icebreaker für LinkedIn-Outreach-Nachrichten.
+    const systemPrompt = `Du bist ein Outreach-Assistent. Du kriegst ein Bild oder einen Ausschnitt aus dem LinkedIn Profil der Person. Du generierst Icebreaker für LinkedIn-Outreach-Nachrichten.
 
 Deine Aufgaben:
 1. Extrahiere NUR den VORNAMEN der Person (NICHT den Nachnamen! Nur "Max", nicht "Max Müller")
@@ -105,8 +104,7 @@ Nicht "wow das ist toll" sondern "das war bestimmt kein einfacher Weg" – echte
 ❌ "seit 14 Jahren als Geschäftsstellenleiterin bei Debeka in Hamm tätig – beeindruckende Kontinuität." (alles zusammen + KI-Wort)
 ❌ "als Leiterin bei Debeka zeugt das von Engagement." (KI-Wörter)
 ❌ "wie gehst du mit den Herausforderungen um?" (FRAGE!)
-❌ "ich könnte dir dabei helfen." (ANGEBOT!)'
-
+❌ "ich könnte dir dabei helfen." (ANGEBOT!)`;
 
     const userPrompt = customPrompt
       ? `Analysiere dieses LinkedIn-Profil und generiere Icebreaker mit folgendem Fokus: ${customPrompt}`
