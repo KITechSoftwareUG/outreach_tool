@@ -9,6 +9,11 @@ import { useAuth } from "@/hooks/useAuth";
 import { toast } from "@/hooks/use-toast";
 import type { Tables } from "@/integrations/supabase/types";
 import { Separator } from "@/components/ui/separator";
+import {
+  AlertDialog, AlertDialogAction, AlertDialogCancel,
+  AlertDialogContent, AlertDialogDescription, AlertDialogFooter,
+  AlertDialogHeader, AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 
 type SenderProfile = Tables<"sender_profiles">;
 
@@ -17,6 +22,7 @@ export default function Index() {
   const [profiles, setProfiles] = useState<SenderProfile[]>([]);
   const [activeId, setActiveId] = useState<string | null>(null);
   const [dialogOpen, setDialogOpen] = useState(false);
+  const [deleteId, setDeleteId] = useState<string | null>(null);
 
   const activeProfile = profiles.find((p) => p.id === activeId) ?? null;
 
@@ -81,6 +87,26 @@ export default function Index() {
     toast({ title: "Gespeichert" });
   };
 
+  const deleteProfile = async () => {
+    if (!deleteId) return;
+    const { error } = await supabase
+      .from("sender_profiles")
+      .delete()
+      .eq("id", deleteId);
+    if (error) {
+      toast({ title: "Fehler", description: error.message, variant: "destructive" });
+      setDeleteId(null);
+      return;
+    }
+    setProfiles((prev) => prev.filter((p) => p.id !== deleteId));
+    if (activeId === deleteId) {
+      const remaining = profiles.filter((p) => p.id !== deleteId);
+      setActiveId(remaining.length > 0 ? remaining[0].id : null);
+    }
+    setDeleteId(null);
+    toast({ title: "Profil gelöscht" });
+  };
+
   return (
     <SidebarProvider>
       <div className="min-h-screen flex w-full">
@@ -90,6 +116,7 @@ export default function Index() {
           onSelect={setActiveId}
           onCreate={() => setDialogOpen(true)}
           onRename={renameProfile}
+          onDelete={(id) => setDeleteId(id)}
         />
         <div className="flex-1 flex flex-col">
           <header className="h-12 flex items-center border-b px-4">
@@ -124,6 +151,20 @@ export default function Index() {
         onClose={() => setDialogOpen(false)}
         onCreate={createProfile}
       />
+      <AlertDialog open={!!deleteId} onOpenChange={(open) => { if (!open) setDeleteId(null); }}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Profil löschen?</AlertDialogTitle>
+            <AlertDialogDescription>
+              Das Profil wird unwiderruflich gelöscht. Bist du sicher?
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Abbrechen</AlertDialogCancel>
+            <AlertDialogAction onClick={deleteProfile}>Löschen</AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </SidebarProvider>
   );
 }

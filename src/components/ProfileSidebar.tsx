@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from "react";
-import { Plus, User, LogOut, ChevronDown, ChevronRight, Workflow, BarChart3, Pencil } from "lucide-react";
+import { Plus, User, LogOut, ChevronDown, ChevronRight, Workflow, BarChart3, Pencil, Trash2 } from "lucide-react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
 import { Button } from "@/components/ui/button";
@@ -26,9 +26,10 @@ interface Props {
   onSelect: (id: string) => void;
   onCreate: () => void;
   onRename?: (id: string, newName: string) => void;
+  onDelete?: (id: string) => void;
 }
 
-export function ProfileSidebar({ profiles, activeId, onSelect, onCreate, onRename }: Props) {
+export function ProfileSidebar({ profiles, activeId, onSelect, onCreate, onRename, onDelete }: Props) {
   const { signOut } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
@@ -91,12 +92,20 @@ export function ProfileSidebar({ profiles, activeId, onSelect, onCreate, onRenam
                     >
                       <User className="h-4 w-4" />
                       <span className="flex-1">{p.name}</span>
-                      {onRename && (
-                        <Pencil
-                          className="h-3 w-3 opacity-0 group-hover/menu-item:opacity-60 hover:!opacity-100 transition-opacity shrink-0"
-                          onClick={(e) => startEditing(p, e)}
-                        />
-                      )}
+                      <div className="flex items-center gap-0.5 opacity-0 group-hover/menu-item:opacity-60 transition-opacity shrink-0">
+                        {onRename && (
+                          <Pencil
+                            className="h-3 w-3 hover:!opacity-100"
+                            onClick={(e) => startEditing(p, e)}
+                          />
+                        )}
+                        {onDelete && (
+                          <Trash2
+                            className="h-3 w-3 hover:!opacity-100 hover:text-destructive"
+                            onClick={(e) => { e.stopPropagation(); onDelete(p.id); }}
+                          />
+                        )}
+                      </div>
                     </SidebarMenuButton>
                   )}
                 </SidebarMenuItem>
