@@ -22,6 +22,7 @@ export default function Index() {
   const [profiles, setProfiles] = useState<SenderProfile[]>([]);
   const [activeId, setActiveId] = useState<string | null>(null);
   const [dialogOpen, setDialogOpen] = useState(false);
+  const [deleteId, setDeleteId] = useState<string | null>(null);
 
   const activeProfile = profiles.find((p) => p.id === activeId) ?? null;
 
