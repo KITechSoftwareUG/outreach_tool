@@ -26,9 +26,10 @@ interface Props {
   onSelect: (id: string) => void;
   onCreate: () => void;
   onRename?: (id: string, newName: string) => void;
+  onDelete?: (id: string) => void;
 }
 
-export function ProfileSidebar({ profiles, activeId, onSelect, onCreate, onRename }: Props) {
+export function ProfileSidebar({ profiles, activeId, onSelect, onCreate, onRename, onDelete }: Props) {
   const { signOut } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
