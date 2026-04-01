@@ -116,6 +116,7 @@ export default function Index() {
           onSelect={setActiveId}
           onCreate={() => setDialogOpen(true)}
           onRename={renameProfile}
+          onDelete={(id) => setDeleteId(id)}
         />
         <div className="flex-1 flex flex-col">
           <header className="h-12 flex items-center border-b px-4">
