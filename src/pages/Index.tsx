@@ -151,6 +151,20 @@ export default function Index() {
         onClose={() => setDialogOpen(false)}
         onCreate={createProfile}
       />
+      <AlertDialog open={!!deleteId} onOpenChange={(open) => { if (!open) setDeleteId(null); }}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Profil löschen?</AlertDialogTitle>
+            <AlertDialogDescription>
+              Das Profil wird unwiderruflich gelöscht. Bist du sicher?
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Abbrechen</AlertDialogCancel>
+            <AlertDialogAction onClick={deleteProfile}>Löschen</AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </SidebarProvider>
   );
 }
