@@ -87,6 +87,26 @@ export default function Index() {
     toast({ title: "Gespeichert" });
   };
 
+  const deleteProfile = async () => {
+    if (!deleteId) return;
+    const { error } = await supabase
+      .from("sender_profiles")
+      .delete()
+      .eq("id", deleteId);
+    if (error) {
+      toast({ title: "Fehler", description: error.message, variant: "destructive" });
+      setDeleteId(null);
+      return;
+    }
+    setProfiles((prev) => prev.filter((p) => p.id !== deleteId));
+    if (activeId === deleteId) {
+      const remaining = profiles.filter((p) => p.id !== deleteId);
+      setActiveId(remaining.length > 0 ? remaining[0].id : null);
+    }
+    setDeleteId(null);
+    toast({ title: "Profil gelöscht" });
+  };
+
   return (
     <SidebarProvider>
       <div className="min-h-screen flex w-full">
