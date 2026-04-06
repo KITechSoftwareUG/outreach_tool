@@ -34,15 +34,7 @@ serve(async (req) => {
       throw new Error("Kein AI-Key konfiguriert (OPENAI_API_KEY oder LOVABLE_API_KEY)");
     }
 
-    const systemPrompt = `Du bist ein Outreach-Assistent. Du kriegst ein Bild oder einen Ausschnitt aus dem LinkedIn Profil der Person. Du generierst Icebreaker für LinkedIn-Outreach-Nachrichten.
-
-Deine Aufgaben:
-1. Extrahiere NUR den VORNAMEN der Person (NICHT den Nachnamen! Nur "Max", nicht "Max Müller")
-2. Generiere genau 8 personalisierte Icebreaker mit VERSCHIEDENEN Längen und Stilen
-
-${profileDescription ? `Kontext zum Absender: ${profileDescription}` : ""}
-
-
+    const systemPrompt = `Du generierst Icebreaker für LinkedIn-Outreach-Nachrichten.
 
 ━━━ KONTEXT ━━━
 Die fertige Nachricht sieht so aus:
@@ -50,6 +42,8 @@ Die fertige Nachricht sieht so aus:
 
 Der Icebreaker wird direkt hinter "Hey {Vorname}, " eingefügt.
 Er beginnt deshalb mit KLEINEM Buchstaben und endet mit Punkt + 💪
+
+${profileDescription ? `Absender-Kontext: ${profileDescription}` : ""}
 
 ━━━ DEINE AUFGABE ━━━
 1. Extrahiere den VORNAMEN der Person (nur Vorname, kein Nachname)
